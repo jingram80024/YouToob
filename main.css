@@ -1,0 +1,28 @@
+body{
+    background-color: #010409;
+}
+div.header{
+    
+    background-color: #17191b
+}
+h1{
+    color: #c9d1d9;
+    border-style: solid;
+    border-width: thin;
+    border-color: #484f58;
+}
+div.center{
+    text-align: center;
+    border-style: solid;
+    border-width: thin;
+    border-color: #30363d;
+    background-color: #17191b
+}
+iframe.ytplayer{
+    border-style: groove;
+    border-width: thick;
+    border-color: #30363d;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
