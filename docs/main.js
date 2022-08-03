@@ -8,11 +8,13 @@ form.addEventListener("keydown",function(event){
 });
 
 function getURL(){
-    let rawURL = form.value;
-    //testURL = "https://www.google.com/watch?v=cbuZfY2S2UQ";
-    let idIndex = rawURL.search("/watch");
-    let videoID = rawURL.slice(idIndex+9);
-    let repeatURL = "https://www.youtube.com/embed/" + videoID + "?playlist=" + videoID + "&loop=1";
+    const regex = /(\/|%3|v=|vi=)([0-9A-z-_]{11})([%#?&]|$)/;
+    const rawURL = form.value;
+    console.log(rawURL);
+    const videoID = rawURL.split(regex)[2];
+    console.log(videoID);
+    const repeatURL = "https://www.youtube.com/embed/" + videoID + "?playlist=" + videoID + "&loop=1";
+    console.log(repeatURL);
     const player = document.getElementById("ytplayer");
     player.src = repeatURL;
     document.getElementById("url_field").value = "";
