@@ -30,17 +30,27 @@
     </head>
     <body>
         <div class="header">
-            <h1>YouToob&#8482</h1>
+            <div class="header_image">
+                <image src="./img/favicon-96x96.png"></image>
+            </div>
+            <div class="header_text">
+                <h1>YouToob&#8482</h1>
+            </div>
+        </div>
+        <div class="user_form">
+            <label for="url_field">Enter a YouTube URL:</label>
+            <input type="text" id="url_field" name="url_field" size="50" value="https://www.youtube.com/watch?v=muJK8Rx-Yhc">
+            <input type="button" value="Play" onclick="getURL();return false;"><br><br>
         </div>
         <div class="center">
             <iframe
             id="ytplayer"
             type="text/html"
             style="width: 640px; height: 360px; left: 0px; top:0px;"
-            src="https://www.youtube.com/embed/muJK8Rx-Yhc?playlist=muJK8Rx-Yhc&loop=1"
+            src=""
             frameborder="0">
             </iframe>
         </div>
-        
+        <script src="main.js"></script>
     </body>
 </html>
