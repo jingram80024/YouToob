@@ -4,7 +4,14 @@
         <title>YouToob&#8482</title>
         <meta name="description" content="YouToob">
         <meta name="author" content="Jonathan Ingram">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--CSS-->
         <link rel="stylesheet" href="main.css">
+        <!--JS-->
+        <script defer src="main.js"></script>
+        <script defer src="plugins.js"></script>
+        <script defer src="polygons.js"></script>
+        <!--links...should this be a separate file for clarity?-->
         <!--favicon generated using inkscape and application formatting done by favicomatic.com-->
         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="./img/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./img/apple-touch-icon-114x114.png" />
@@ -29,28 +36,33 @@
         <meta name="msapplication-square310x310logo" content="./img/mstile-310x310.png" />
     </head>
     <body>
-        <div class="header">
-            <div class="header_image">
-                <image src="./img/favicon-96x96.png"></image>
+        <main class="s-home s-home--particles">
+            <div id="particles-js" class="home-particles"><canvas class="particles-js-canvas-el" width="3840" height="1536" style="width: 100%; height: 100%;"></canvas></div>
+            <div class="gradient-overlay"></div>
+            <div class="home-content">
+                <div class="header">
+                    <div class="header_image">
+                        <image src="./img/favicon-96x96.png"></image>
+                    </div>
+                    <div class="header_text">
+                        <h1>YouToob&#8482</h1>
+                    </div>
+                </div>
+                <div class="user_form">
+                    <label for="url_field">Enter a YouTube URL:</label>
+                    <input type="text" id="url_field" name="url_field" size="50" value="https://www.youtube.com/watch?v=muJK8Rx-Yhc">
+                    <input type="button" value="Play" style="padding: 10px 20px;" onclick="getURL();return false;"><br><br>
+                </div>
+                <div class="center">
+                    <iframe
+                        id="ytplayer"
+                        type="text/html"
+                        style="width: 100%; height: 100%; left: 0px; top:0px; opacity: 1;"
+                        src=""
+                        frameborder="0">
+                    </iframe>
+                </div>
             </div>
-            <div class="header_text">
-                <h1>YouToob&#8482</h1>
-            </div>
-        </div>
-        <div class="user_form">
-            <label for="url_field">Enter a YouTube URL:</label>
-            <input type="text" id="url_field" name="url_field" size="50" value="https://www.youtube.com/watch?v=muJK8Rx-Yhc">
-            <input type="button" value="Play" onclick="getURL();return false;"><br><br>
-        </div>
-        <div class="center">
-            <iframe
-            id="ytplayer"
-            type="text/html"
-            style="width: 640px; height: 360px; left: 0px; top:0px;"
-            src=""
-            frameborder="0">
-            </iframe>
-        </div>
-        <script src="main.js"></script>
+        </main>
     </body>
 </html>
