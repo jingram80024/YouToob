@@ -48,7 +48,6 @@ div.center{
 }
 .center iframe {
     max-width: 1280px;
-    min-height: 720px;
     border-style: groove;
     border-width: thick;
     border-color: #30363d;
@@ -157,7 +156,7 @@ div.center{
     }
     .center iframe{
         min-width: none;
-        max-height: none;
+        min-height: 320px;
     }
 }
 @media only screen and (max-width:1400px){
