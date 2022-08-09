@@ -47,7 +47,7 @@ div.center{
     background-color: #17191b
 }
 .center iframe {
-    max-width: 1280px;
+    min-height: 576px;
     border-style: groove;
     border-width: thick;
     border-color: #30363d;
