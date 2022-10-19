@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+docs/_config.yml -linguist-vendor
+docs/plugins.js -linguist-vendor
+docs/polygons.js -linguist-vendor
