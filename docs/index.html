@@ -51,7 +51,9 @@
                 <div class="user_form">
                     <label for="url_field">Enter a YouTube URL:</label>
                     <input type="text" id="url_field" name="url_field" size="50" value="https://www.youtube.com/watch?v=muJK8Rx-Yhc">
-                    <input type="button" value="Play" style="padding: 10px 20px;" onclick="getURL();return false;"><br><br>
+                    <input type="button" value="Play" style="padding: 10px 20px;" onclick="getURL();return false;">
+                    <input type="button" value="Add To Favorites" style="padding: 10px 20px;" onclick="addCurrentToFavorites();return false;">
+                    <br><br>
                 </div>
                 <div class="center">
                     <iframe
@@ -62,7 +64,15 @@
                         frameborder="0">
                     </iframe>
                 </div>
+                <div class="center">
+                    <h1>Favorites:</h1>
+                    <div id="favorites"></div>
+                </div>
+                <div class="footer">
+                    <h4><a href="https://github.com/jingram80024/YouToob">Check out this project at GitHub</a></h4>
+                </div>
             </div>
+            
         </main>
     </body>
 </html>

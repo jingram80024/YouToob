@@ -1,3 +1,6 @@
+h1 {
+    color: #c9d1d9;
+}
 body{
     background-color: #010409;
     font-size: 100%;
@@ -54,6 +57,15 @@ div.center{
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+a.favorite {
+    color: white;
+    display: inline-block;
+}
+
+.card {
+    color: white;
 }
 
 /* home */
@@ -142,8 +154,8 @@ div.center{
 /* home content */
 .home-content {
     margin: auto;
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
     position: absolute;
     top: 0;
     overflow: hidden;
