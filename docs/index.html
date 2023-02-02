@@ -50,20 +50,13 @@
                 </div>
                 <div class="user_form">
                     <label for="url_field">Enter a YouTube URL:</label>
-                    <input type="text" id="url_field" name="url_field" size="50" value="https://www.youtube.com/watch?v=muJK8Rx-Yhc">
+                    <input type="text" id="url_field" name="url_field" size="50" value="">
                     <input type="button" value="Play" style="padding: 10px 20px;" onclick="getURL();return false;">
                     <input type="button" value="Add To Favorites" style="padding: 10px 20px;" onclick="addCurrentToFavorites();return false;">
+                    <input type="button" value="logPlayerStatus" onclick="logPlayerStatus();return false;">
                     <br><br>
                 </div>
-                <div class="center">
-                    <iframe
-                        id="ytplayer"
-                        type="text/html"
-                        style="width: 100%; height: 100%; left: 0px; top:0px; opacity: 1;"
-                        src=""
-                        frameborder="0">
-                    </iframe>
-                </div>
+                <div class="center" id="player"></div>
                 <div class="center">
                     <h1>Favorites:</h1>
                     <div id="favorites"></div>
