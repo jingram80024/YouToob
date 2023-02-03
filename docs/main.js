@@ -71,12 +71,10 @@ function updatePlayerList(listID){
         modestbranding: 1,
         controls: 1,
         loop: 1
+      },
+      events:{
+        'onReady': onPlayerReady
       }
-    });
-    player.loadPlaylist({
-        list: listID,
-        listType: 'playlist',
-        index: 0
     });
 }
 
@@ -92,15 +90,21 @@ function updatePlayerVideo(videoID){
             controls: 1,
             modestbranding: 1,
             loop: 1
+        },
+        events:{
+            'onReady': onPlayerReady
         }
     });
-    player.loadVideoById({videoId: videoID});
+}
+function onPlayerReady(event){
+    event.target.playVideo();
 }
 
 /* Adding favorites
 -----------------------------------------*/
 
 function buildFavorites(itemID, favType){
+    console.log('itemID: ',itemID); 
     const favorites = document.getElementById('favorites');
     const favs = favorites.getElementsByClassName('favorite');
     
@@ -112,15 +116,16 @@ function buildFavorites(itemID, favType){
     fav.classList.add('favorite');
     fav.alt = itemID;
     fav.id = itemID;
-    rawID = itemID.split(favType)[1];
+    let rawID = itemID.split(favType)[1];
     if (favType == "LIST-") {
-        console.log(rawID);
+        // what image do you want for lists?
         fav.onclick = function(event) {
             updatePlayerList(rawID);
         }
     } else {
         fav.src = thumbURL(rawID);
         fav.onclick = function(event) {
+            console.log("rawID: ",rawID);
             updatePlayerVideo(rawID);
         }
     }
@@ -166,6 +171,7 @@ function addCurrentToFavorites(favType){
         videoID = player.getVideoData().video_id;
         title = player.getVideoData().title;
         playlist = player.getPlaylistId();
+        console.log("adding to favorites: ",videoID,title,playlist);
     } catch (e) {
         console.log(e.name);
         console.log('Error: no favorite selected');
