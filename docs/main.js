@@ -1,8 +1,7 @@
-//MY_API = ;
 /* DOM element declarations
 -----------------------------------------*/
 const form = document.getElementById("url_field");
-/* Load YouTube IFrame API
+/* Load YouTube iFrame API
 -----------------------------------------*/
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -14,11 +13,12 @@ function onYouTubePlayerAPIReady() {
     player = new YT.Player('player', {
       height: '390',
       width: '640',
-      videoId: 'muJK8Rx-Yhc',
+      videoId: 'TURbeWK2wwg', //sample video
       playerVars:{
         playsinline: 1,
         controls: 1,
-        modestbranding: 1
+        modestbranding: 1,
+        loop: 1
       }
     });
 }
@@ -40,13 +40,6 @@ function getListID(url){
 
 /* "Play" button action
 -----------------------------------------*/
-function logPlayerStatus(){
-    state = player.getPlayerState();
-    url = player.getVideoUrl();
-    playlist = player.getPlaylist();
-    index = player.getPlaylistIndex();
-    console.log('state: ', state, '| url: ', url, '| playlist: ', playlist, '| index: ', index);
-}
 form.addEventListener("keydown",function(event){
     if (event.key === "Enter"){
         getURL();
@@ -55,7 +48,7 @@ form.addEventListener("keydown",function(event){
 
 function getURL(){
     const rawURL = form.value;
-    if (rawURL == null || rawURL == '' || rawURL == 'http://localhost:8080/'){return;}
+    if (rawURL == null || rawURL == ''){return;}
     if (rawURL.includes("list")){
         const listID = getListID(rawURL);
         updatePlayerList(listID);
@@ -66,7 +59,7 @@ function getURL(){
 }
 
 function updatePlayerList(listID){
-    console.log('cueing ', listID);
+    console.log('loading playlist: ', listID);
     player.destroy();
     player = new YT.Player('player', {
       height: '390',
@@ -76,41 +69,60 @@ function updatePlayerList(listID){
       	listType: 'playlist',
         list: listID,
         modestbranding: 1,
+        controls: 1,
+        loop: 1
       }
+    });
+    player.loadPlaylist({
+        list: listID,
+        listType: 'playlist',
+        index: 0
     });
 }
 
 function updatePlayerVideo(videoID){
-    //const repeatURL = "https://www.youtube.com/embed/" + videoID + "?playlist=" + videoID + "&loop=1";
-    //const player = document.getElementById("ytplayer");
-    //player.src = repeatURL;
-    //document.getElementById("url_field").value = "";
-    //
-    console.log("cueing video",videoID);
+    console.log("loading video: ", videoID);
+    player.destroy();
+    player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: videoID,
+        playerVars:{
+            playsinline: 1,
+            controls: 1,
+            modestbranding: 1,
+            loop: 1
+        }
+    });
     player.loadVideoById({videoId: videoID});
 }
 
 /* Adding favorites
 -----------------------------------------*/
 
-function buildPage(videoID){
+function buildFavorites(itemID, favType){
     const favorites = document.getElementById('favorites');
     const favs = favorites.getElementsByClassName('favorite');
     
-    //
-    //plays = 0;// delete once play counter implemented
-    title = localStorage.getItem('VID-'+videoID);
-    //
+    title = localStorage.getItem(itemID);
     card = document.createElement('div');
     card.classList.add('card');
-    card.id = 'CAPT.PRICE-' + videoID;
-    fav = document.createElement('img');
+    card.id = 'CAPT.PRICE-' + itemID;
+    let fav = document.createElement('img');
     fav.classList.add('favorite');
-    fav.alt = videoID;
-    fav.id = videoID;
-    fav.src = thumbURL(videoID);
-    fav.onclick = function(event) {
-        updatePlayerVideo(this.id);
+    fav.alt = itemID;
+    fav.id = itemID;
+    rawID = itemID.split(favType)[1];
+    if (favType == "LIST-") {
+        console.log(rawID);
+        fav.onclick = function(event) {
+            updatePlayerList(rawID);
+        }
+    } else {
+        fav.src = thumbURL(rawID);
+        fav.onclick = function(event) {
+            updatePlayerVideo(rawID);
+        }
     }
     container = document.createElement('div');
     container.classList.add('container');
@@ -125,12 +137,12 @@ function buildPage(videoID){
     button = document.createElement('input');
     button.type = 'button';
     button.value = 'X';
-    button.id = videoID;
+    button.id = itemID;
     button.style = 'padding: 5px 5px;';
     button.onclick = function(event){
         enemyUAVoverhead = this.id;
         document.getElementById('CAPT.PRICE-'+enemyUAVoverhead).remove();
-        localStorage.removeItem('VID-'+videoID);
+        localStorage.removeItem(itemID);
     }
     card.appendChild(fav);
     //card.appendChild(h4);
@@ -140,65 +152,57 @@ function buildPage(videoID){
     favorites.appendChild(card);
 }
 
-async function getVideoDetails(videoID) {
-    //requestURL = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoID + '&key=' + MY_API + '&part=snippet,contentDetails,statistics,status';
-    //let response = await fetch(requestURL);
-    //let data = await response.json();
-    let data = 'title unavailable'; // delete after API key security issue fixed
-    return data;
-}
-
 function thumbURL(videoID) {
     thumb = 'http://img.youtube.com/vi/' + videoID + '/1.jpg';
     return thumb;
 }
 
-function addCurrentToFavorites(){
-    let rawURL = '';
-    if (form.value != ''){
-        rawURL = form.value; // pull from input field
-    } else {
-        // try to pull from currently playing video
-        try {
-            let player = document.getElementById('ytplayer');
-            rawURL = player.src;
-        } catch (e) { // if throws TypeError (no video in iframe) 
-            console.log(e.name);
-            console.log('no favorite selected');
-            return;
-        }
-        if (rawURL == null || rawURL == '' || rawURL == 'http://localhost:8080/') { // if not a valid youtube link
-            return;
-        }
+function addCurrentToFavorites(favType){
+    let videoID = '';
+    let title = '';
+    let listID = '';
+
+    try {
+        videoID = player.getVideoData().video_id;
+        title = player.getVideoData().title;
+        playlist = player.getPlaylistId();
+    } catch (e) {
+        console.log(e.name);
+        console.log('Error: no favorite selected');
+        return;
+    }
+    if (videoID == null || videoID == '') {
+        console.log('Error: no video found');
+        return;
+    }
+    if ((listID == null || listID == '') && favType == "LIST-"){
+        console.log('Error: no playlist found');
+        return;
     }
 
-    const videoID = getVideoID(rawURL);
+    let itemID = (favType == 'LIST-' ? "LIST-"+listID : "VID-"+videoID);
+
     const favorites = document.getElementById('favorites');
     const favs = favorites.getElementsByClassName('favorite');
     for (i=0; i< favs.length; i++) {
         id = favs[i].id
-        if (id == videoID) {
-            console.log("already a favorite");
+        if (id == itemID){
+            console.log('already a favorite');
             return;
         }
     }
 
-    console.log('API request made');
-    getVideoDetails(videoID).then(data => {
-        console.log('API response recieved');
-        //let title = data.items[0].snippet.title;
-        localStorage.setItem('VID-'+videoID,data);// replace data with title after rethinking API Key security issue.
-        buildPage(videoID);
-    });
+    localStorage.setItem(itemID,(favType == 'LIST-' ? listID : title))//adjust later to prompt user to name playlist
+    buildFavorites(itemID, favType);
 }
 
 window.addEventListener('load', () => {
     for (var i = 0; i < localStorage.length; i++){
         key = localStorage.key(i);
-        if (!(key.includes('VID-'))){
+        if (!(key.includes('VID-') || key.includes('LIST-'))){
             continue;
         }
-        ID = key.split('VID-')[1];
-        buildPage(ID);
+
+        buildFavorites(key,(key.includes('LIST-') ? "LIST-" : "VID-"));
     }
 });

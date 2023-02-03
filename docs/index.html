@@ -52,8 +52,9 @@
                     <label for="url_field">Enter a YouTube URL:</label>
                     <input type="text" id="url_field" name="url_field" size="50" value="">
                     <input type="button" value="Play" style="padding: 10px 20px;" onclick="getURL();return false;">
-                    <input type="button" value="Add To Favorites" style="padding: 10px 20px;" onclick="addCurrentToFavorites();return false;">
-                    <input type="button" value="logPlayerStatus" onclick="logPlayerStatus();return false;">
+                    <br><br>
+                    <input type="button" value="Add Video to Favorites" style="padding: 10px 20px;" onclick="addCurrentToFavorites('VID-');return false;">
+                    <input type="button" value="Add Playlist to Favorites" style="padding: 10px 20px;" onclick="addCurrentToFavorites('LIST-');return false;">
                     <br><br>
                 </div>
                 <div class="center" id="player"></div>
