@@ -104,7 +104,6 @@ function onPlayerReady(event){
 -----------------------------------------*/
 
 function buildFavorites(itemID, favType){
-    console.log('itemID: ',itemID); 
     const favorites = document.getElementById('favorites');
     const favs = favorites.getElementsByClassName('favorite');
     
@@ -125,7 +124,6 @@ function buildFavorites(itemID, favType){
     } else {
         fav.src = thumbURL(rawID);
         fav.onclick = function(event) {
-            console.log("rawID: ",rawID);
             updatePlayerVideo(rawID);
         }
     }
@@ -170,8 +168,8 @@ function addCurrentToFavorites(favType){
     try {
         videoID = player.getVideoData().video_id;
         title = player.getVideoData().title;
-        playlist = player.getPlaylistId();
-        console.log("adding to favorites: ",videoID,title,playlist);
+        listID = player.getPlaylistId();
+        console.log("adding to favorites: ",videoID,title,listID);
     } catch (e) {
         console.log(e.name);
         console.log('Error: no favorite selected');
