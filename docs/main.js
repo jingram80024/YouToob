@@ -18,7 +18,8 @@ function onYouTubePlayerAPIReady() {
         playsinline: 1,
         controls: 1,
         modestbranding: 1,
-        loop: 1
+        loop: 1,
+        playlist: 'TURbeWK2wwg'
       }
     });
 }
@@ -89,7 +90,8 @@ function updatePlayerVideo(videoID){
             playsinline: 1,
             controls: 1,
             modestbranding: 1,
-            loop: 1
+            loop: 1,
+            playlist: videoID 
         },
         events:{
             'onReady': onPlayerReady
