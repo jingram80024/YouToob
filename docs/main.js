@@ -105,7 +105,132 @@ function onPlayerReady(event){
 /* Adding favorites
 -----------------------------------------*/
 
-function buildFavorites(itemID, favType){
+function populateFavorites(itemID, favType){
+    console.log(itemID);
+    const favorites_div = document.getElementById('favorites');
+    const title = localStorage.getItem(itemID);
+    const maxColumns = 4;
+    let card_prereqs = Boolean(false);
+    let rawID = itemID.split(favType)[1];
+    let index = -1;
+
+    while(!card_prereqs) {
+        // check for containers
+        const containers = document.getElementsByClassName('container');
+        if (containers.length == 0) {
+            const container = document.createElement('div');
+            container.classList.add('container');
+            favorites_div.appendChild(container);
+            continue;
+        }
+    
+        // check for available card slots in each container until one is found or finish looking
+        for (let i = 0; i < containers.length; i++) {
+            index = i;
+            const cards = containers[i].children;
+            if (cards.length < 4) {
+                card_prereqs = Boolean(true);
+                break;
+            }
+        }
+        
+        if (!card_prereqs) {
+            // we need a new container
+            const container = document.createElement('div');
+            container.classList.add('container');
+            favorites_div.appendChild(container);
+            continue;
+        }
+    }
+
+    const containers = document.getElementsByClassName('container');
+    const free_container = containers[index];
+
+    /* card template
+    <div class="card">
+        <h3 class="title">Card 1</h3>
+        <div class="bar">
+            <div class="emptybar"></div>
+            <div class="filledbar"></div>
+        </div>
+        <div class="circle">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <circle class="stroke" cx="60" cy="60" r="50"/>
+            </svg>
+        </div>
+    </div>
+    */
+
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.id = itemID;
+
+    const title_h = document.createElement('h3');
+    title_h.textContent = title;
+    title_h.classList.add('title');
+
+    const bar = document.createElement('div');
+    bar.classList.add('bar');
+    const emptybar = document.createElement('div');
+    emptybar.classList.add('emptybar');
+    const filledbar = document.createElement('div');
+    filledbar.classList.add('filledbar');
+    /*const circle_div = document.createElement('div');
+    circle_div.classList.add('circle');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.version = "1.1";
+    const circle = document.createElement('circle');
+    circle.classList.add('stroke');
+    circle.cx = '60';
+    circle.cy = '60';
+    circle.r = '50';*/
+    const thumbnail = document.createElement('img');
+    thumbnail.id = itemID;
+    thumbnail.alt = itemID;
+    thumbnail.src = thumbURL(rawID);
+    if (favType == "LIST-") {
+        // what image do you want for lists?
+        thumbnail.onclick = function(event) {
+            updatePlayerList(rawID);
+        }
+    } else {
+        thumbnail.onclick = function(event) {
+            updatePlayerVideo(rawID);
+        }
+    }
+    const button = document.createElement('input');
+    button.type = 'button';
+    button.value = 'X';
+    button.id = itemID;
+    button.style = 'padding: 5px 5px; position: absolute; right; 0px;';
+    button.onclick = function(event){
+        console.log(this.id + " removed from favorites");
+        const cardClass = document.getElementsByClassName('card');
+        for (let i = 0; i < cardClass.length; i++) {
+            if (cardClass[i].id == this.id) {
+                cardClass[i].remove();
+                localStorage.removeItem(this.id);
+            }
+        }
+    }
+    
+    bar.appendChild(emptybar);
+    bar.appendChild(filledbar);
+
+    /*svg.appendChild(circle);
+    circle_div.appendChild(svg);*/
+
+    card.appendChild(title_h);
+    card.appendChild(bar);
+    //card.appendChild(circle_div);
+    card.appendChild(thumbnail);
+    card.appendChild(button);
+
+    free_container.appendChild(card);    
+}
+
+
+/*function buildFavorites(itemID, favType){
     const favorites = document.getElementById('favorites');
     const favs = favorites.getElementsByClassName('favorite');
     
@@ -155,7 +280,7 @@ function buildFavorites(itemID, favType){
     card.appendChild(button);
     
     favorites.appendChild(card);
-}
+}*/
 
 function thumbURL(videoID) {
     thumb = 'http://img.youtube.com/vi/' + videoID + '/1.jpg';
@@ -188,18 +313,14 @@ function addCurrentToFavorites(favType){
 
     let itemID = (favType == 'LIST-' ? "LIST-"+listID : "VID-"+videoID);
 
-    const favorites = document.getElementById('favorites');
-    const favs = favorites.getElementsByClassName('favorite');
-    for (i=0; i< favs.length; i++) {
-        id = favs[i].id
-        if (id == itemID){
-            console.log('already a favorite');
-            return;
-        }
+    if (localStorage.getItem(itemID) != null) {
+        console.log("already a favorite.");
+        return;
     }
 
     localStorage.setItem(itemID,(favType == 'LIST-' ? listID : title))//adjust later to prompt user to name playlist
-    buildFavorites(itemID, favType);
+    //buildFavorites(itemID, favType);
+    populateFavorites(itemID, favType);
 }
 
 window.addEventListener('load', () => {
@@ -209,6 +330,7 @@ window.addEventListener('load', () => {
             continue;
         }
 
-        buildFavorites(key,(key.includes('LIST-') ? "LIST-" : "VID-"));
+        //buildFavorites(key,(key.includes('LIST-') ? "LIST-" : "VID-"));
+        populateFavorites(key,(key.includes('LIST-') ? "LIST-" : "VID-"));
     }
 });
