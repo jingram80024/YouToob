@@ -108,7 +108,7 @@ function onPlayerReady(event){
 function populateFavorites(itemID, favType){
     console.log(itemID);
     const favorites_div = document.getElementById('favorites');
-    const title = localStorage.getItem(itemID);
+    const title = localStorage.getItem(itemID).slice(0,50) + "...";
     const maxColumns = 4;
     let card_prereqs = Boolean(false);
     let rawID = itemID.split(favType)[1];
